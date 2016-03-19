@@ -1,0 +1,39 @@
+	<!-- 城市列表 -->
+
+<div id="ciTyListTop">
+ 	<span>城市列表 </span>	
+ 	<div id="closeCityList" title="关闭城市列表"></div>
+</div>
+  <!-- 设置默认城市 -->
+<div id="setDefaultCity">
+    <div id="CurCityInfo">
+        <span>当前城市：</span><span id="cur_city"></span>
+      <a id="SetDefCity" href="javascript:void(0);">设为默认城市</a>
+    </div>
+    <div id="DefCityInfo">
+      <span>您默认的城市是：</span>
+      <span id="defCityIs" ></span>
+      <span>[<a href="javascript:void(0);">删除</a>]</span>
+    </div>
+</div>
+  <!-- 城市搜索-->
+<div id="citySearch">
+  	<input id="citySearchInput" type="text" value="输入城市名" onfocus="this.value='';">
+  	<div  id="citySearchBnt">搜索</div>
+</div>
+<div id="citylist_container">
+	<dl>
+		{{#district}}
+		<dt><a href="javascript:void(0)">{{districtName}}</a>:</dt>
+		<dd>
+		{{#districtCity}}
+		<a href="javascript:void(0)" code="{{@index}}">{{city}}</a>
+		{{/districtCity}}
+		</dd>
+		{{/district}}
+	</dl>
+</div>
+
+
+
+

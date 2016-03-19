@@ -1,0 +1,7 @@
+<table id='qq_busRouteTable' class='busresultTable'>
+	<thead><tr><th>腾讯公交乘车方案</th></tr></thead>
+	<tr><td>{{start.name}} -----> {{end.name}} <span style="margin-right:20px; ">所属城市：{{city}}</span></td></tr>
+	{{#plans}}
+	<tr><th>{{index @index}}.{{#lines}}{{name}}———>>{{/lines}}</th></tr>
+	{{/plans}}
+</table>

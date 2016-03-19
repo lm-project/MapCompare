@@ -1,0 +1,32 @@
+<table id="searchResults" class="resultTable">
+	<thead><tr>
+		  <th>城市</th>
+		  <th>结果数</th>
+		  <th>鍦板潃</th>
+		  <th title="鍏磋叮鐐圭粡绾害">鍧愭爣</th>
+          <th>鐢佃瘽</th>
+          <th>閭紪</th>
+          <th title="鍑哄叆鍙ｇ粡绾害">鍑哄叆鍙ｇ粡绾害</th>
+	      <th title="鎵�湪鍩庡競/琛屾斂鍖�>鎵�湪鍩庡競/琛屾斂鍖�/th>
+	      <th title="鐢靛瓙閭">鐢靛瓙閭</th><th>缃戝潃</th>
+	      <th>绫诲瀷</th>
+	      <th title="绂讳腑蹇冪偣璺濈">绂讳腑蹇冪偣璺濈</th>
+	      </tr>
+	</thead>
+	 {{#pois}}
+    	<tr><td>{{addOne @index}}</td>
+ 		<td>{{havaVal name}}</td>
+		<td>{{havaVal address}}</td>
+		<td>{{havaVal location}}</td>
+		<td>{{havaVal tel}}</td>
+		<td>{{havaVal postcode}}</td>
+		<td>鍏ュ彛锛歿{havaVal entr_location}}鍑哄彛锛歿{havaVal exit_location}}</td>
+		<td>{{havaVal cityname}}/{{havaVal adname}}</td>
+		<td>{{havaVal email}}</td>
+		<td>{{havaVal website}}</td>
+		<td>{{havaVal type}}</td>
+		<td>{{havaVal distance}}</td>
+ 		</tr>
+ 	{{/pois}}
+</table>
+            

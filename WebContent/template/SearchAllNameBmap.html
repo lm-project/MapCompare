@@ -1,0 +1,17 @@
+<table id="searchResults" class="resultTable">
+	<thead>
+		<tr>
+		  <th style="width:25px;">序号</th>
+		  <th>城市</th>
+		  <th>数量</th>
+     	 </tr>
+	</thead>
+	{{#each getCityList}}
+    <tr>
+    	<td>{{addOne @index}}</td>
+ 		<td><a>{{city}}</a></td>
+		<td><a>{{numResults}}</a></td>
+	</tr>
+	{{/each}}
+</table>
+            

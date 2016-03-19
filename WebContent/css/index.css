@@ -1,0 +1,167 @@
+body{overflow:auto;font-size:12px;font-family:arial,SimSun,Verdana,Geneva,Helvetica;}
+#mapTop{height:74px;min-width:100%;}
+#divSearchBox{height:55px; margin:10px 5%;}
+#searchOption{text-align:center;color:#6e6e6e;cursor:pointer;}
+.select{width:50px;height:20px;line-height:20px;background:#fafafa;border:1px solid #e5e7e9;border-bottom:0;float:left;margin-right:5px;}
+.selected{width:50px;height:20px;line-height:20px;background:#ff8e2a;border:1px solid #ff8e2a;border-bottom:0;color:#fff;float:left;margin-right:5px;}
+#coorPolicy{display:none;width:75px;height:20px;border:1px solid #e5e7e9;border-bottom: 0;float: left;background:#FFFFCC;}
+#serInputDiv{clear: left;}                                          
+.SearchInput{line-height:20px;height:20px;width:150px;color:#999999;padding:5px 10px;font-size:14px;border:2px solid #ff8e2a;border-right:0px;float: left;} #txtKeywords{width:280px;} 
+#twoSerInput{display: none;}
+#btnSearch{width:90px;height:34px;background:url(../image/hotel_Map_icons.png) no-repeat -0px -266px;cursor:pointer;border:0;float: left;}
+#btnSearch:hover{width:90x;height:34px;background:url(../image/hotel_Map_icons.png) no-repeat -0px -300px;cursor:pointer;border:0;float:left}  
+#changeMap{float: left;margin:10px 3%;}	
+.mapNameBnt{cursor: pointer;} 
+#autoCompleteDiv{position:absolute;margin:-10px 5%;background:#fafafa; z-index:10; overflow: auto; width:auto;border: 1px solid gray;display:none;}
+#autoCompleteDiv div{font-size: 13px;cursor:pointer;padding:5px 5px 5px 5px;}
+#autoCompleteDiv div:HOVER{background:#CAE1FF;}
+#autoCompleteDiv .autoDistrict{color:#C1C1C1;padding-left:5px; }
+#mapTop #clientIp{float: right;display: none}
+ #allToolbar{position:relative;line-height: 26px;height:26px;width:100%;font-size: 13px;}
+  	#allToolbar .selCityList{position:absolute;left:10px;background:#fafafa;}
+  	#allToolbar .alltoolbtn{position:absolute;right:0px;background:#fafafa;cursor:pointer;}
+ 	#allToolbar .alltools{position:relative; float: left;border: solid #BDD2EB 1px;text-align: right;}
+ 	#allToolbar .alltools:HOVER{background:highlight;}
+ 	#allToolbar .alltools .alltoolImg{position: absolute;left:3px;top: 7px;display:inline-block;width:14px;height:13px;background: url(../image/baiduIndex.png) no-repeat;}
+ 	#allToolbar .alltools .alltoolmtImg{position: absolute;left:1px;top: 7px; display:inline-block;width:14px;height:13px;background: url(../image/bdmaptype_img.gif) no-repeat;}
+	#allToolbar .alltools .allToolText{padding-right: 5px;} 
+/**************************鼠标联动样式 ****************************/
+	#allToolbar #curLinkage{display:none; position:absolute;top:25px;z-index: 1000;cursor: pointer;background: #fafafa;}
+	#allToolbar #curLinkage div{border: 1px solid #C8D9EE;cursor: pointer;}
+	#allToolbar #curLinkage div:HOVER{background: #E5E6E6;}
+	#allToolbar #curLinkage span{width:12px;height:13px;vertical-align:text-bottom; display:inline-block;background: url("../image/baidu_img.gif") no-repeat;}
+/**************************视野内搜索样式 ****************************/
+	#allToolbar #insightSearchDiv{display:none;height: 342px;width: 245px;border: 1px solid #9DB3CB;position: absolute;box-shadow: 1px 1px 2px 0 #9DB3CB;z-index: 1000;background: #FFF;}	
+	#allToolbar #insightSearchDiv .region_srh_box{margin: 0;padding: 0;border: 0;font: inherit;font-family: Tohoma,"宋体";vertical-align: baseline;}
+	#allToolbar #insightSearchDiv .region_srh_title {padding: 8px;border-bottom: 1px solid #e5e1e2;text-align:left;height:15px;line-height:15px;}
+	#allToolbar #insightSearchDiv .srh_close {display: block;float: right;height: 10px;width: 10px;background: url(http://www.amap.com/img/way_btn.png) no-repeat -62px -12px;margin-top: 3px;}
+	#allToolbar #insightSearchDiv .srh_list_item{margin: 0;padding: 0;border: 0;font: inherit;font-family: Tohoma,"宋体";vertical-align: baseline;}
+	#allToolbar #insightSearchDiv .item_title {border-left: 3px solid #2371dd;height: 12px;line-height: 12px;padding-left:5px;text-align:left;}
+	#allToolbar #insightSearchDiv .item-category {padding: 8px;line-height: 18px;overflow: hidden;}
+	#allToolbar #insightSearchDiv .item-category-item {float: left;margin-right: 10px;text-decoration: none;line-height: 18px;word-break: break-all;white-space: nowrap;}
+	#allToolbar #insightSearchDiv .clr {clear: both;font-size: 0;height: 0;line-height: 0;overflow: hidden;}
+	#allToolbar #insightSearchDiv .region-srh-input {padding: 0 8px 8px;}
+	#allToolbar #insightSearchDiv .region-srh-ipt {width: 170px;line-height: 22px;height: 22px;padding: 3px 0 3px 3px;float: left;border: 1px solid #c5c5c5;border-right: 0;}
+	#allToolbar #insightSearchDiv .region-srh-btn {width: 50px;height: 30px;text-align: center;cursor: pointer;border: 1px solid #c6c6c6;line-height: 26px;float: left;background: -webkit-gradient(linear,0 0,0 100%,from(#FFF),to(#f1f1f1));background: -moz-linear-gradient(top,#FFF,#f1f1f1);background: linear-gradient(to bottom,#fff,#f1f1f1);filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#FFFFFF, endColorstr=#F1F1F1, grandientType=0);}
+.mapContainer{background:none;width:49%;min-height:550px;float: left;position: relative;}
+#centerDiv{background:none;width:2%;float: left;min-height:550px;}
+.mapTitel{widht:100%; height:30px;line-height:30px;background:#fafafa;border:1px solid #e5e7e9;}
+.allMap{position:relative; background:none;height:550px;border:#ccc solid 2px}
+#divAmapPano,#divBaiduPano,#divSosoPano,#sosoMap,#gugeMap,#imgMap{display:none;}
+#amapName{float: left;margin-left: 25%;}
+#layerList{list-style:none;position:absolute;background:#EDEDED;display:none;border: 1px solid #ABCEEC;box-shadow: 2px 2px 2px -1px #bbb;z-index: 302;width: 100px;text-align: left;}
+.layerCheck{vertical-align: middle}
+.gd_tool_bar{float:right; width:50px;height:30px; background: url('../image/gd_toolsBar.png') -49px 0;text-align: center;cursor: pointer;}
+#aToolBar{position:absolute;background:#EDEDED;display:none;border: 1px solid #ABCEEC;box-shadow: 2px 2px 2px -1px #bbb;z-index: 302;width: 100px;text-align: left;}
+.gdTool{height:28px;line-height: 28px;width: 75px;padding-left: 25px;cursor: pointer;background:url(../image/gd_tab.png) no-repeat 0 0;}
+.gdTool:HOVER{background: #C6F4FA;}
+.mapZoom{float:left; border: 1px solid #BCD1EB;height: 22px;line-height: 22px;text-align: center;margin-top: 5px;}
+/**************************城市列表样式 ****************************/
+#cityList{background:#F9F9F9;display:none;position:absolute;z-index:200;width:300px;height: 300px;font-size:12px;border-bottom:3px solid #CCC;border-left: 1px solid #ccc;}
+#ciTyListTop{border:1px solid #CCC;height: 25px;line-height: 25px;padding-left: 7px;  }
+#setDefaultCity{border-bottom: 1px solid #CCC;border-right: 1px solid #CCC;height:40px;margin: 7px auto;}
+#CurCityInfo{line-height: 20px;padding-left: 7px;}
+#DefCityInfo{display: none;padding-left: 7px;}
+#citySearch{height:25px;line-height:30px; vertical-align: middle;border-right: 1px solid #CCC; }
+#citySearchInput{margin-left:30%; height:18px;width: 121px;color: gray;vertical-align: top;}
+#citySearchBnt{display: inline-block;width: 48px; height: 24px;line-height: 24px;background: url(../image/baidu_tools_img.png) no-repeat scroll 0px -123px;cursor: pointer;text-align: center;vertical-align: top;}
+#citylist_container{padding-left: 10px;background:#f9f9f9;height:205px ;overflow-y:scroll; overflow-x:hidden;border-right:1px solid;border-top:1px solid;border-bottom:2px solid;border-color:#CCC;}
+#citylist_container dl {-webkit-margin-before: 1em;-webkit-margin-after: 1em;-webkit-margin-start: 0px;-webkit-margin-end: 0px;}
+#citylist_container dt {float: left;width: 52px;padding: 2px 0;vertical-align: top;line-height: 150%;}
+#citylist_container dt a{color: #000;margin-right: 0;}
+#citylist_container dd {margin-left: 52px;padding: 2px 0;vertical-align: top;line-height: 150%;}
+#citylist_container a{margin-right: 8px;}
+#closeCityList{float:right;cursor:pointer;margin-top: 3px; width:20px ;height:20px;background: url(../image/baidu_tools_img.png) no-repeat -125px -254px;}
+/**************************百度地图样式 ****************************/
+#bmapName{float: left;margin-left: 10%;}
+.bd_Btn{position:relative;float:right;height: 24px;line-height: 24px;background: url("../image/baidu_tools_img.png") 0 0;cursor: pointer;margin-top: 5px;}
+#bdMap,#bdSalite,#bdStrView,#bd3D,#bdFullScreen,#bdTool{width: 43px;text-align: center;}
+.toolBtn_img{position:absolute;left:3px;top:6px; width:14px;height: 13px;background:url("../image/baiduIndex.png");}
+.toolBtn_cont{position: absolute;right: 3px;}
+#toolsbox{text-align:left;z-index: 300000;background: #fafafa;width: 61px;border: #c3c3c2 solid 1px;position: absolute;left: 0px;top:24px;}
+.toolsbox_item{position: relative;padding-left: 22px;display: block;height: 22px;line-height: 22px;text-align: baseline;cursor: pointer;text-decoration: none;color: #333;z-index: 100001;	}
+.tool_item_img{position: absolute;background: url(../image/baiduIndex.png) no-repeat 0 -278px;overflow: hidden;zoom: 1;top: 6px;width: 12px;height: 12px;left: 5px;}
+.toolsbox_item:HOVER{background: #C6F4FA;}
+/**************************腾讯地图样式 ****************************/
+#smapName{float: left;margin-left:45px; }
+#qqBarBnt{float: right;}
+.qq_bnt{cursor: pointer;float: left;width: 45px;height: 24px;background-image: url('../image/qqMapImg.png');margin-top: 5px;}
+#opensosoPano{width: 62px;height:25px;top:-1px;position: relative;}
+#opensosoPano img{position: absolute;left:5px ;top:-6px ;}
+
+/**************************影像地图样式 ****************************/
+#imapName{margin-left: 40%;}
+/***************************************搜索结果样式**************************/
+#Aresult,#Bresult,#Soresult{font-size:12px;line-height: 20px;font-family: arial,SimSun,Verdana,Geneva,Helvetica;color: #131313;}
+.resultTable{width: 100%;table-layout: fixed;}
+.resultTable td, .resultTable th{border:1px solid blue;white-space:nowrap; overflow:hidden; text-align:center;cursor:pointer; }
+.resultTable  th{background: yellow;}
+#page{margin-left: 30px;}
+/* 公交路线换乘  */
+body #mapCenter .busresultTable td,.busresultTable th{
+	border:1px solid blue; 	
+	white-space:nowrap; 
+    overflow:hidden; 
+	text-align:left;
+	cursor:pointer; 
+}
+/* 公交路线每条方案 */
+body #mapCenter .busresultTable {
+	width: 100%;
+}
+body #mapCenter .busresultTable tr{
+	width: 100%;
+}
+body #mapCenter .busresultTable th{
+	width: 100%;
+}
+body #mapCenter .busresultTable td{
+	width: 100%;
+}
+body #mapCenter .busresultTable .detaileInfo{
+	display: none;
+	background:yellow;
+}
+body #mapCenter .busresultTable .busLineName{
+	background:#CFE7B4;
+}
+/*交通方式图片*/
+.trafficTool_img{width: 25px;height: 18px;display: inline-block;background:url("../image/baidu_img.gif") no-repeat;}
+
+/*******************************************驾车检索**************************************************************/
+.turning_img{ margin-bottom: -4px;display:inline-block;background:url(../image/turningSmap.png) no-repeat;width:19px;height:19px;}
+/************************************************************************ 帮助说明 */
+body #help {background:lime;width:50%;height:60%; display:none;z-index: 200;position: absolute;top: 20%;left: 25%; font-size:12px;}
+body #help #helpTitle{width: 100%;height:8%;background: gray;position: relative;}
+body #help #helpTitle span{font-weight:bold;font-size:large;position: absolute;left:35%;top:20%;} 
+body #help #helpTitle a{text-decoration:none;cursor:pointer;position: absolute;right: 10px;top:18%;width:60px;height:20px;border: solid 1px #84CFF4;line-height: 20px;background: white;}
+body #help #helpTitle a:HOVER{border: 2px solid #3C97CD;}
+body #help #helpTitle a span{width:16px;height:16px;display:inline-block;position:absolute;left:2px; top:2px;background: url("../image/baidu_img.gif") -14px -189px;}
+body #help #helpTitle a b{position: absolute;left:25px;}
+body #help #helpNavi{background:#c4fcb0;width:20%;height:92%;float: left;}
+body #help #helpNavi a{text-decoration:none;}
+body #help #helpNavi b{font-size:15px; }
+body #help #helpNavi b span{width:15px ;height:15px ;display: inline-block;background: url("../image/baidu_tools_img.png") 0px -278px;}
+body #help #helpNavi img{vertical-align:text-bottom;} 
+body #help #helpNavi .helpCategory{}
+body #help #helpNavi .helpCategory:HOVER{width:80px ;height:20px ;background: url("../image/baidu_img.gif") -168px -508px;border: 1px solid #97A8BC;}
+body #help #helpNavi .helpItem{margin-left: 15px;}
+body #help #helpNavi .helpItem div{width: 80px;height:18px;line-height: 18px;text-align: left;font-size: 11px; }
+body #help #helpNavi .helpItem span{width:11px;height:11px; background-image:url('../image/icon_1.gif');display:inline-block;vertical-align: text-bottom;} 
+body #help #helpNavi .helpItem div:HOVER{background:#E6E7E6;border: 2px solid #FEA647;} 
+body #help #helpExpatiation{overflow:auto;width:80%;height:92%;letter-spacing:2px; float: left;background: #E2F5F7;font-size: 12px;font-family: arial,SimSun,Verdana,Geneva,Helvetica;color: #131313;}
+body #help #helpExpatiation div b{display: inline-block;padding-left: 15px;}
+body #help #helpExpatiation div h6{padding-left: 20px;}
+body #help #helpExpatiation div p{padding-left: 25px;}
+body #help #helpExpatiation a{cursor: pointer;}
+body #help #helpExpatiation div{line-height: 20px;text-indent: 32px;}
+body #help #helpExpatiation .firstTitle{font-size: 16px;font-weight: bold;text-indent: 5px;}
+body #help #helpExpatiation .secondTitle{font-weight: bold;}
+
+/* 拉狂放大缩小 */
+.stretchDiv{width: 17px;height: 17px;position:absolute; right:2px;bottom: 2px;background: url(../image/mapcontrols.png) repeat scroll -40px -405px transparent;cursor:pointer; z-index: 10;display: none;}
+/* .stretchDiv{width: 17px;height: 17px;position:relative; left: 97%;top: -20px;background: url(../image/mapcontrols.png) repeat scroll -40px -386px transparent;cursor:pointer; z-index: 10;}
+ */
+ 
+
+

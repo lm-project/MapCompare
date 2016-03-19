@@ -1,0 +1,878 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style type="text/css">
+body{margin: 0;padding: 0;}
+.pano-wrap{width: 100%;height: 100%;position: absolute; top:0; left:0;/*padding:5px;*/background: #FFF;overflow: hidden;border:1px #bcbabb solid;}
+.pano-wrap #minimap{margin:5px;height: 166px;border:1px #bcbabb solid;}
+.pano-wrap .pano-narrow{width: 15px;height: 15px;position: absolute; background: url(../img/pano/minimap.png) no-repeat;}
+.pano-wrap #narrow-top{top:-1px;left: -1px;cursor: pointer;z-index: 1030;}
+.pano-wrap #narrow-bottom{bottom: 0; right: 0; cursor: pointer;background-position: -183px 0px;z-index: 1025;}
+.pano-wrap .small-expand,.pano-wrap .expand{background-position: -183px -15px;}
+.pano-wrap .big-expand{background-position: -183px 0px;}
+.pano-wrap .tool-hide{display: none;}
+.pano-wrap .tool-show{display: block;}
+.pano-wrap #tool-switch{position: absolute;top:10px;right:40px;z-index:200;}
+.pano-wrap #tool-switch .switch-btn{height:21px;background: url(../img/pano/map_sate.png) no-repeat; cursor: pointer; float:left;}
+.pano-wrap #tool-switch .map-btn{width: 40px;}
+.pano-wrap #tool-switch .sate-btn{width: 40px;background-position: -1px -24px;}
+.pano-wrap #tool-switch .map-hover{background-position: -41px 0;}
+.pano-wrap #tool-switch .sate-hover{background-position: -42px -24px;}
+.pano-wrap #tool-switch .map-select{background-position: -82px 0;}
+.pano-wrap #tool-switch .sate-select{background-position: -83px -24px;}
+.pano-wrap #tool-zoom{position: absolute;top:10px;right:10px;z-index: 200;}
+.pano-wrap #tool-zoom .zoom-btn{width: 18px;height: 18px;background:url(../img/pano/map_zoom.png) no-repeat;cursor: pointer;}
+.pano-wrap #tool-zoom .zoomin-btn{background-position:0 0;}
+.pano-wrap #tool-zoom .zoomout-btn{background-position: 0 -57px;}
+.pano-wrap #tool-zoom .zoomin-hover{background-position:0 -19px;}
+.pano-wrap #tool-zoom .zoomout-hover{background-position:0 -76px;}
+.pano-wrap #tool-zoom .zoomin-select{background-position:0 -38px;}
+.pano-wrap #tool-zoom .zoomout-select{background-position:0 -95px;}
+.pano-wrap .marker-man{position: absolute; z-index: 103; width: 24px; height: 45px; top: -37px; left: -12px; background-image: url(/img/pano/knerten.png); background-repeat: no-repeat no-repeat;}
+.pano-wrap .marker-shinning{position: absolute; z-index: 102; background-image: url(/img/pano/direction.png);background-repeat: no-repeat no-repeat;}
+.pano-wrap .marker-angle{ background: #FFF; opacity:0;filter:alpha(opacity=0);position: absolute; z-index: 103; }
+</style>
+</head>
+<body>
+    <div class="pano-wrap">
+        <div id="minimap"></div>
+        <div id="tool-switch" class="tool-hide minimap-tool">
+            <div class="map-btn switch-btn map-select" type="maplayer"></div>
+            <div class="sate-btn switch-btn" type="satelayer"></div>
+        </div>
+        <div id="tool-zoom" class="tool-hide minimap-tool">
+            <div class="zoomin-btn zoom-btn" type="zoomin"></div>
+            <div class="zoomout-btn zoom-btn" type="zoomout"></div>
+        </div>
+        <div id="narrow-top" class="pano-narrow small-expand"></div>
+        <div id="narrow-bottom" class="pano-narrow unexpand"></div>
+    </div>
+    <div class="clear"></div>
+    <script type="text/javascript" src="../js/lib/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.2&key=b2992a19dfcee083c3e8647b38db8420"></script>
+    <script type="text/javascript">
+    window.PCMAP = parent['PCMAP'];
+    var minimap = {
+        init: function() {
+            this.bindEvent();
+            $(parent.window).on('resize', this.resize);
+        },
+        resize: function() {
+            var hasBigExpand = $('#narrow-top').hasClass('big-expand');
+            if (hasBigExpand) {
+                PCMAP.events.emit('map-getMiniMapHW', function(param) {
+                    minimap_height = param.height;
+                    var frm = $(parent.document).find('#overview_iframe');
+                    var mapDom = $('#minimap');
+                    frm.css('height', minimap_height + 'px');
+                    mapDom.css('height', (minimap_height - 14) + 'px');
+                });
+                var map_height = $(parent.document).find('#map').height();
+                if (map_height < 100) {
+                    $(parent.document).find('#overview_iframe').hide();
+                } else if (map_height > 100) {
+                    $(parent.document).find('#overview_iframe').show();
+                }
+            }
+        },
+        initstyle: function() {
+            $('.minimap-tool').removeClass('tool-show').addClass('tool-hide');
+            $('#narrow-top').removeClass('big-expand').addClass('small-expand');
+        },
+        bindEvent: function() {
+            var self = this;
+            $('#narrow-top').on('click', function() {
+                var hasSmallExpand = $(this).hasClass('small-expand');
+                var hasBigExpand = $(this).hasClass('big-expand');
+                var frm = $(parent.document).find('#overview_iframe');
+                var mapDom = $('#minimap');
+                var minimap_width, minimap_height;
+                if (hasSmallExpand) {
+                    PCMAP.events.emit('pano-getMinimapCenter');
+                    PCMAP.events.emit('map-getMiniMapHW', function(param) {
+                        minimap_width = param.width;
+                        minimap_height = param.height;
+                        frm.animate({
+                            width: '100%',
+                            height: minimap_height + 'px'
+                        }, 300);
+                        mapDom.animate({
+                            height: (minimap_height - 14) + 'px'
+                        }, 300, function() {
+                            PCMAP.events.emit('main-resize');
+                            setTimeout(function() {
+                                $('#narrow-top').removeClass('small-expand').addClass('big-expand');
+                                $('.minimap-tool').removeClass('tool-hide').addClass('tool-show');
+                                PCMAP.events.emit('pano-setMinimapCenter');
+                                setTimeout(function(){
+                                    PCMAP.events.emit('pano-getMinimapCenter');
+                                },2000);
+                            }, 700);
+                        });
+                    });
+                } else if (hasBigExpand) {
+                    PCMAP.events.emit('main-resize', {
+                        panoMiniMapIsClose: true
+                    });
+                    PCMAP.events.emit('pano-getMinimapCenter');
+                    frm.animate({
+                        width: '180px',
+                        height: '180px'
+                    }, 300);
+                    mapDom.animate({
+                        height: '166px'
+                    }, 300, function() {
+
+                        setTimeout(function() {
+                            $('#narrow-top').removeClass('big-expand').addClass('small-expand');
+                            $('.minimap-tool').removeClass('tool-show').addClass('tool-hide');
+                            PCMAP.events.emit('pano-setMinimapCenter');
+                            setTimeout(function(){
+                                PCMAP.events.emit('pano-getMinimapCenter');
+                            },2000);
+                        }, 700);
+                    });
+                } else {
+
+                    // PCMAP.events.emit('pano-getMinimapCenter');
+                    frm.animate({
+                        width: '180px',
+                        height: '180px'
+                    }, 300);
+                    mapDom.animate({
+                        height: '166px'
+                    }, 300, function() {
+                        PCMAP.events.emit('main-resize');
+                        setTimeout(function() {
+                            $('#narrow-top').removeClass('expand').addClass('small-expand');
+                            $('.minimap-tool').removeClass('tool-show').addClass('tool-hide');
+                            PCMAP.events.emit('pano-setMinimapCenter');
+
+                        }, 700)
+                    });
+                }
+            });
+            $('#narrow-bottom').on('click', function() {
+                if ($('#narrow-top').hasClass('big-expand')) {
+                    PCMAP.events.emit('main-resize', {
+                        panoMiniMapIsClose: true
+                    });
+                }
+                PCMAP.events.emit('pano-getMinimapCenter');
+                var frm = $(parent.document).find('#overview_iframe');
+                frm.animate({
+                    width: '15px',
+                    height: '15px'
+                }, 300);
+
+                $('#narrow-top').removeClass('big-expand').removeClass('small-expand').addClass('expand');
+                $('.minimap-tool').removeClass('tool-show').addClass('tool-hide');
+
+            });
+            $('.switch-btn').on('mouseover', function() {
+                var type = $(this).attr('type');
+                if (type == 'maplayer') {
+                    $(this).addClass('map-hover');
+                } else if (type == 'satelayer') {
+                    $(this).addClass('sate-hover');
+                }
+            }).on('mouseout', function() {
+                var type = $(this).attr('type');
+                if (type == 'maplayer') {
+                    $(this).removeClass('map-hover');
+                } else if (type == 'satelayer') {
+                    $(this).removeClass('sate-hover');
+                }
+            }).on('click', function() {
+                var type = $(this).attr('type');
+                if (type == 'maplayer') {
+                    $(this).addClass('map-select');
+                    $(this).siblings().removeClass('sate-select');
+                    PCMAP.events.emit('pano-removeTileLayerSatellite');
+                } else if (type == 'satelayer') {
+                    $(this).addClass('sate-select');
+                    $(this).siblings().removeClass('map-select');
+                    PCMAP.events.emit('pano-addTileLayerSatellite');
+                }
+            });
+            $('.zoom-btn').on('mouseover', function() {
+                var type = $(this).attr('type');
+                if (type == 'zoomin') {
+                    $(this).addClass('zoomin-hover');
+                } else {
+                    $(this).addClass('zoomout-hover');
+                }
+            }).on('mouseout', function() {
+                var type = $(this).attr('type');
+                if (type == 'zoomin') {
+                    $(this).removeClass('zoomin-hover');
+                } else if (type == 'zoomout') {
+                    $(this).removeClass('zoomout-hover');
+                }
+            }).on('mousedown', function() {
+                var type = $(this).attr('type');
+                if (type == 'zoomin') {
+                    $(this).addClass('zoomin-select');
+                } else if (type == 'zoomout') {
+                    $(this).addClass('zoomout-select');
+                }
+            }).on('mouseup', function() {
+                var type = $(this).attr('type');
+                if (type == 'zoomin') {
+                    $(this).removeClass('zoomin-select');
+                    PCMAP.events.emit('pano-miniMapZoomin');
+                } else if (type == 'zoomout') {
+                    $(this).removeClass('zoomout-select');
+                    PCMAP.events.emit('pano-miniMapZoomout');
+                }
+            });
+        }
+    };
+    minimap.init();
+
+    var mvce = {
+        M: {},
+        V: {},
+        C: {},
+        E: {}
+    };
+    mvce.M = {
+        panoMap: null, //街景地图
+        panoMapCenter: null,
+        panoPoiDatas: {},
+        panoMarkers: {},
+        panoMarkerMan: null,
+        panoManContent: null,
+        panoMarkerAngle: null,
+        panoAngleContent: null,
+        panoMarkerShinning: null,
+        panoShinningContent: null,
+        panoInfowindow: null,
+        panobgIndex: 0,
+        panoTileLayer: {},
+        initCenter: window.location.search,
+        miniMapClickTimer: null,
+        panoLableData: null
+    };
+    mvce.C = {
+        knerten: [
+            'background-position: -306px 0px;',
+            'background-position: -159px 0px;',
+            'background-position: -125px 0px;',
+            'background-position: -278px 0px;',
+            'background-position: -96px 0px;',
+            'background-position: -64px 0px;',
+            'background-position: -336px 0px;',
+            'background-position: -31px 0px;',
+            'background-position: -2px 0px;',
+            'background-position: -249px 0px;',
+            'background-position: -222px 0px;',
+            'background-position: -192px 0px;'
+        ],
+        direction: [
+            'width: 77px; height: 40px; top: -41px; left: -39px; background-position: -32px -29px;',
+            'width: 65px; height: 49px; top: -45px; left: -21px; background-position: -50px -163px;',
+            'width: 45px; height: 65px; top: -47px; left: -3px; background-position: -68px -294px;',
+            'width: 41px; height: 76px; top: -37px; left: 1px; background-position: -73px -444px;',
+            'width: 46px; height: 60px; top: -14px; left: -5px; background-position: -66px -577px;',
+            'width: 64px; height: 47px; top: -6px; left: -21px; background-position: -50px -721px;',
+            'width: 77px; height: 40px; top: 1px; left: -40px; background-position: -31px -869px;',
+            'width: 68px; height: 43px; top: -3px; left: -48px; background-position: -23px -1016px;',
+            'width: 46px; height: 66px; top: -23px; left: -43px; background-position: -28px -1128px;',
+            'width: 37px; height: 77px; top: -40px; left: -39px; background-position: -32px -1261px;',
+            'width: 44px; height: 67px; top: -48px; left: -42px; background-position: -30px -1398px;',
+            'width: 65px; height: 46px; top: -43px; left: -44px; background-position: -27px -1544px;'
+        ],
+        dragStyle: [
+            'width: 77px; height: 40px; top: -41px; left: -39px;',
+            'width: 65px; height: 49px; top: -45px; left: -21px;',
+            'width: 45px; height: 65px; top: -46px; left: -3px;',
+            'width: 41px; height: 76px; top: -37px; left: 1px;',
+            'width: 46px; height: 60px; top: -13px; left: -5px;',
+            'width: 64px; height: 47px; top: -4px; left: -21px;',
+            'width: 77px; height: 40px; top: 2px; left: -40px;',
+            'width: 68px; height: 43px; top: -2px; left: -48px;',
+            'width: 46px; height: 66px; top: -22px; left: -43px;',
+            'width: 37px; height: 77px; top: -40px; left: -39px;',
+            'width: 44px; height: 67px; top: -47px; left: -41px;',
+            'width: 65px; height: 46px; top: -43px; left: -44px;'
+        ],
+        initPanoMap: function() {
+            var self = this;
+            var pos = self.urlToJson(mvce.M.initCenter).pos.split(',');
+            var id = 'defaultLayer';
+            var defaultLayer = new AMap.TileLayer({
+                id: id,
+                detectRetina: false,
+                map: mvce.M.panoMap
+            });
+            mvce.M.panoTileLayer[id] = defaultLayer;
+            var opt = {
+                level: 15, //设置地图zoom级别
+                scrollWheel: true,
+                center: new AMap.LngLat(pos[0], pos[1]), //当前城市中心
+                defaultLayer: defaultLayer,
+                dragEnable: true,
+                doubleClickZoom: true,
+                resizeEnable: true
+            };
+            var panoMap = new AMap.Map('minimap', opt);
+            mvce.M.panoMap = panoMap;
+            mvce.M.panoTileLayer['panoLayer'] = new AMap.TileLayer({
+                map: mvce.M.panoMap,
+                detectRetina: false,
+                getTileUrl: function(x, y, z) {
+                    var tileUrl = 'http://websv.is.autonavi.com/appmaptile';
+                    tileUrl += '?x=' + x;
+                    tileUrl += '&y=' + y;
+                    tileUrl += '&z=' + z;
+                    return tileUrl;
+                },
+                zIndex: 5
+            });
+            // var isDoubleClick = null;
+            _addEvent(panoMap, 'click', function(e) {
+                // self.setPlace(e.lnglat)
+                if (mvce.M.miniMapClickTimer) {
+                    clearTimeout(mvce.M.miniMapClickTimer);
+                    mvce.M.miniMapClickTimer = null;
+                }
+                mvce.M.miniMapClickTimer = setTimeout(function() {
+                    mvce.M.miniMapClickTimer = null;
+                    PCMAP.events.emit('pano-getPanoInfo', {
+                        lnglat: e.lnglat,
+                        callback: function(data) {
+                            if (data.result == 'nodata') {
+                                self.setPlace(mvce.M.panoMapCenter);
+                            } else {
+                                var _key = data.key;
+                                PCMAP.events.emit("uri-moduleChange", {
+                                    module: "pano",
+                                    data: {
+                                        panoId: data[_key].panoId
+                                    }
+                                });
+                                mvce.M.panoMapCenter = e.lnglat;
+                                // mvce.M.panoMap.panTo(e.lnglat);
+                            }
+                        }
+                    });
+                }, 200);
+            });
+            _addEvent(panoMap, 'dblclick', function(e) {
+                if (mvce.M.miniMapClickTimer) {
+                    clearTimeout(mvce.M.miniMapClickTimer);
+                    mvce.M.miniMapClickTimer = null;
+                }
+            });
+            setTimeout(function() {
+                PCMAP.events.emit('pano-addOverlays', new AMap.LngLat(pos[0], pos[1]));
+            }, 1000);
+        },
+        urlToJson: function(url) {
+            var pairs = url.replace(/^\?/, '').split('&'),
+                obj = {};
+            for (var i = pairs.length - 1; i >= 0; i--) {
+                var pair = pairs[i].split('=');
+                obj[pair[0]] = pair[1] ? decodeURIComponent(pair[1]) : '';
+            }
+            return obj;
+        },
+        addMarker: function(param) {
+            var self = this;
+            var datas = param.list;
+            var map = mvce.M.panoMap;
+            for (var i = 0; i < datas.length; i++) {
+                var aPoi = datas[i];
+                var type = aPoi.markerType;
+                var content = document.createElement("div");
+                content.id = 'marker-' + aPoi.id;
+                content.className = 'marker-' + type + ' marker-normal marker-' + i;
+                content.title = aPoi.name;
+                mvce.M.panoPoiDatas[aPoi.id] = aPoi;
+                var markerOption = {
+                    map: map,
+                    zIndex: 10,
+                    position: aPoi.location,
+                    offset: {
+                        x: -12,
+                        y: -30
+                    },
+                    content: content
+                };
+                var aMarker = new AMap.Marker(markerOption);
+                aMarker.id = aPoi.id;
+                mvce.M.panoMarkers[aPoi.id] = aMarker;
+                _addEvent(aMarker, "click", function(e) {
+                    // var poiid = e.target.id;
+                    // PCMAP.events.emit('pano-getPanoInfo', {
+                    //     lnglat: e.lnglat,
+                    //     callback: function(data) {
+                    //         if(data.result == 'nodata'){
+                    //             self.setPlace(mvce.M.panoMapCenter);
+                    //         }else{
+                    //             var _key = data.key;
+                    //             PCMAP.events.emit("uri-moduleChange", {
+                    //                 module: "pano",
+                    //                 data: {
+                    //                     panoId: data[_key].panoId
+                    //                 }
+                    //             });
+                    //             mvce.M.panoMapCenter = e.lnglat;
+                    //             self.setPlace(e.lnglat);
+                    //             PCMAP.events.emit("logger-panolog",{
+                    //                 op: 'lanch',
+                    //                 id: data[_key].panoId,
+                    //                 from: 'overview',
+                    //                 pid: poiid
+                    //             });
+
+                    //         }
+                    //     }
+                    // });
+                    var id = e.target.id;
+                    if (mvce.M.panoPoiDatas[id].dynamic && mvce.M.panoPoiDatas[id].dynamic && mvce.M.panoPoiDatas[id].dynamic.pano) {
+                        PCMAP.events.emit('pano-triggerPanoLabelClick', id);
+                    } else {
+                        PCMAP.events.emit('pano-openNoPanoWindow');
+                        // if (confirm('???')) {
+                        //     // 关闭街景蓝色路网
+                        //     PCMAP.events.emit('main-closePanoLayer');
+
+                        //     PCMAP.events.emit('pano-closePano');
+                        // } else {}
+                    }
+                });
+            }
+            return mvce.M.panoMarkers;
+        },
+        clearPanoOverlays: function(param) {
+            var self = this;
+            for (var i = 0; i < param.length; i++) {
+                switch (param[i]) {
+                    case 'marker':
+                        //清除对象
+                        var markerId = "";
+                        var markers = mvce.M.panoMarkers;
+                        for (markerId in markers) {
+                            if (markers.hasOwnProperty(markerId)) {
+                                markers[markerId].setMap(null);
+                                markers[markerId] = null;
+                                delete markers[markerId];
+                            }
+                        }
+                        //清除缓存
+                        var panoPoiDatas = mvce.M.panoPoiDatas;
+                        for (markerId in panoPoiDatas) {
+                            if (panoPoiDatas.hasOwnProperty(markerId)) {
+                                panoPoiDatas[markerId] = null;
+                                delete panoPoiDatas[markerId];
+                            }
+                        }
+                        break;
+                }
+            }
+        },
+        addMarkerMan: function(pos) {
+            var self = this;
+            var type = "marker-man";
+            var content = document.createElement("div");
+            // content.id = 'marker-' + aPoi.id;
+            content.className = type;
+            content.style.cssText = self.knerten[0];
+            content.title = self.isIE8Down() ? '请拖拽当前点至蓝色道路' : '请点击蓝色道路';
+            var markerOption = {
+                id: 'pano-marker-man',
+                map: mvce.M.panoMap,
+                zIndex: 104,
+                position: pos,
+                draggable: true,
+                content: content,
+                cursor: 'pointer',
+                offset: {
+                    x: 0,
+                    y: 0
+                }
+            };
+            var aMarker = new AMap.Marker(markerOption);
+            mvce.M.panoMarkerMan = aMarker;
+            mvce.M.panoManContent = content;
+            _addEvent(aMarker, "dragend", function(e) {
+                // self.setPlace(e.lnglat);
+
+                PCMAP.events.emit('pano-getPanoInfo', {
+                    lnglat: e.lnglat,
+                    callback: function(data) {
+                        if (data.result == 'nodata') {
+                            self.setPlace(mvce.M.panoMapCenter);
+                        } else {
+                            var _key = data.key;
+                            PCMAP.events.emit("uri-moduleChange", {
+                                module: "pano",
+                                data: {
+                                    panoId: data[_key].panoId
+                                }
+                            });
+                            mvce.M.panoMapCenter = e.lnglat;
+                            // mvce.M.panoMap.panTo(e.lnglat);
+                            PCMAP.events.emit("logger-panolog", {
+                                op: 'lanch',
+                                id: data[_key].panoId,
+                                from: 'overview'
+                            });
+                        }
+                    }
+                });
+                parent.PCMAP.events.emit('map-closeShareIW');
+            });
+            _addEvent(aMarker, "dragging", function(e) {
+                mvce.M.panoMarkerShinning.setPosition(e.lnglat);
+                mvce.M.panoMarkerAngle.setPosition(e.lnglat);
+            });
+        },
+        addMarkerShinning: function(pos) {
+            var self = this;
+            var type = "marker-shinning";
+            var content = document.createElement("div");
+            // content.id = 'marker-' + aPoi.id;
+            content.className = type;
+            content.style.cssText = self.direction[0];
+            var markerOption = {
+                id: 'pano-marker-shinning',
+                map: mvce.M.panoMap,
+                zIndex: 102,
+                position: pos,
+                content: content,
+                cursor: 'pointer',
+                offset: {
+                    x: 0,
+                    y: 0
+                }
+            };
+            var aMarker = new AMap.Marker(markerOption);
+            mvce.M.panoMarkerShinning = aMarker;
+            mvce.M.panoShinningContent = content;
+        },
+        addMarkerAngle: function(pos) {
+            var self = this;
+            var type = "marker-angle";
+            var content = document.createElement("div");
+            content.className = type;
+            content.style.cssText = self.dragStyle[0];
+            var markerOption = {
+                id: 'pano-marker-angle',
+                map: mvce.M.panoMap,
+                zIndex: 103,
+                position: pos,
+                draggable: true,
+                content: content,
+                cursor: 'pointer',
+                offset: {
+                    x: 0,
+                    y: 0
+                }
+            };
+            var aMarker = new AMap.Marker(markerOption);
+            mvce.M.panoMarkerAngle = aMarker;
+            mvce.M.panoAngleContent = content;
+
+            _addEvent(aMarker, "dragging", function(e) {
+                var origin = mvce.M.panoMarkerMan.getPosition();
+                var shift = mvce.M.panoMap.containTolnglat(e.pixel);
+                var compare = new AMap.LngLat(origin.lng, origin.lat + 0.2);
+                var heading = self.countAngle(shift, origin, compare);
+                self.setHeading(heading);
+                PCMAP.events.emit('pano-swf-setHeading', heading);
+            });
+            _addEvent(aMarker, "dragend", function(e) {
+                aMarker.setPosition(mvce.M.panoMarkerMan.getPosition());
+            });
+        },
+        countAngle: function(p0, p1, p2) {
+            var a1 = Math.atan2(p0.lat - p1.lat, p0.lng - p1.lng) * 180 / Math.PI;
+            var a2 = Math.atan2(p2.lat - p1.lat, p2.lng - p1.lng) * 180 / Math.PI;
+            return (a2 - a1 + 360) % 360;
+        },
+        setPlace: function(lnglat) {
+            mvce.M.panoMarkerMan.setPosition(lnglat);
+            mvce.M.panoMarkerAngle.setPosition(lnglat);
+            mvce.M.panoMarkerShinning.setPosition(lnglat);
+        },
+        setHeading: function(heading) { //改变方向
+            var self = this;
+            var index = 0;
+            if (heading < 345 && heading > 15) {
+                heading = heading - 15;
+                index = Math.ceil(heading / 30);
+            }
+
+            mvce.M.panobgIndex = index;
+            mvce.M.panoManContent.style.cssText = self.knerten[index];
+            mvce.M.panoShinningContent.style.cssText = self.direction[index];
+            mvce.M.panoAngleContent.style.cssText = self.dragStyle[index];
+            parent.PCMAP.events.emit('map-closeShareIW');
+            return this;
+        },
+        isIE8Down: function() {
+            return _uaMatch(['msie 6.0', 'msie 7.0', 'msie 8.0']);
+        },
+        isChrome: function() {
+            return _uaMatch(["chrome"]);
+        },
+        isFirefox: function() {
+            return _uaMatch(["firefox"]);
+        },
+        createPanoInfowindow: function(isLoad, poiId, viewBounds) {
+            var self = this;
+            if (!isLoad) {
+                self.loadPanoHtmlforContent(poiId, viewBounds);
+            } else {
+                PCMAP.events.emit('map-showPanoInfowindow', viewBounds);
+            }
+        },
+        loadPanoHtmlforContent: function(poiId, viewBounds) {
+            var self = this;
+            var filename = '';
+            var param;
+            if (mvce.M.panoPoiDatas[poiId]) {
+                param = mvce.M.panoPoiDatas[poiId];
+                param.panopoitype = 'poi';
+                parent.PCMAP.events.emit('main-showTipArrow');
+                self.setPanoInfowindowHtml(param, viewBounds);
+            } else {
+                //逆地理
+                window.parent.seajs.use('js/module/poi/poi', function(poi) {
+                    poi.subModules.service.getDetails(poiId, function(data) {
+                        if (data.poiList && data.poiList.pois.length > 0) {
+                            var poidata = {
+                                list: data.poiList.pois
+                            };
+                            // var param = poidata.list[0];
+                            // param.dynamic = {};
+                            // param.tType = 'other';
+                            // mvce.M.panoLableData = param;
+                            // parent.PCMAP.events.emit('main-showTipArrow');
+                            // self.setPanoInfowindowHtml(param, viewBounds);
+                            poi.subModules.model.getDynamic(poidata, function(result) {
+                                if (result.status == '1') { //添加深度信息
+                                    for (var i = 0; i < poidata.list.length; i++) {
+                                        var id = poidata.list[i].id || poidata.list[i].pguid;
+                                        poidata.list[i].dynamic = result.data[id] || {};
+                                    }
+                                } else {
+                                    poidata = poidata;
+                                }
+                                if (poidata.list) {
+                                    var param = poidata.list[0];
+                                    param.tType = 'other';
+                                    param.panopoitype = 'other';
+                                    mvce.M.panoLableData = param;
+                                    parent.PCMAP.events.emit('main-showTipArrow');
+                                    self.setPanoInfowindowHtml(param, viewBounds);
+                                }
+                            });
+                        }
+
+                    });
+                });
+            }
+
+        },
+        setPanoInfowindowHtml: function(param, viewBounds) {
+            var self = this;
+            filename = "map-panoInfowindow";
+            var pos = param.location.lng + ',' + param.location.lat;
+            data = {
+                id: param.id,
+                pos: pos,
+                name: self.substringName(param.name, 8),
+                title: param.name,
+                address: param.address,
+                tel: param.tel,
+                contain: param.contain,
+                dynamic: param.dynamic,
+                tType: param.tType,
+                panopoitype: param.panopoitype
+            };
+            PCMAP.events.emit('template-load', {
+                filename: filename,
+                data: data,
+                callback: function(html) {
+                    PCMAP.events.emit('map-setPanoInfowindowContent', html);
+                    PCMAP.events.emit('map-showPanoInfowindow', viewBounds);
+                }
+            });
+        },
+        //截取marker点name，超过10个字显示...
+        substringName: function(name, length) {
+            var rtn = '';
+            if (name.length > (length + 1)) {
+                rtn = name.substr(0, length) + '...';
+            } else {
+                rtn = name;
+            }
+            return rtn;
+        }
+    };
+    mvce.E = {
+        bindEvent: function() {
+            var self = this;
+            PCMAP.events.on('pano-addOverlays', function(data) {
+                var pos = data.data;
+                if (mvce.M.panoMarkerMan && mvce.M.panoMarkerShinning && mvce.M.panoMarkerAngle) {
+                    mvce.M.panoMarkerMan.setPosition(pos);
+                    mvce.M.panoMarkerShinning.setPosition(pos);
+                    mvce.M.panoMarkerAngle.setPosition(pos);
+                } else {
+                    mvce.C.addMarkerMan(pos);
+                    mvce.C.addMarkerShinning(pos);
+                    mvce.C.addMarkerAngle(pos);
+                }
+                mvce.M.panoMap.setCenter(pos);
+            });
+
+            // 为街景小地图添加marker
+            PCMAP.events.on('pano-addPoiMarker', function(data) {
+                if (!PCMAP.status.panoIsOpen) {
+                    return;
+                }
+                for (var i = 0; i < data.data.length; i++) {
+                    var zm = data.data[i].z;
+                    mvce.C.addMarker(data.data[i]);
+                    if ($.type(zm) == "number") {
+                        mvce.M.panoMap.setZoom(zm);
+                    } else {
+                        mvce.M.panoMap.setFitView();
+                    }
+                }
+            });
+            PCMAP.events.on('pano-clearPanoOverlays', function(data) {
+                data = data.data;
+                mvce.C.clearPanoOverlays(data);
+            });
+            PCMAP.events.on('pano-openInfowindow', function(data) {
+                PCMAP.events.emit('map-openPanoInfowindow', {
+                    poiId: data.data.poiId,
+                    viewBounds: data.data.viewBounds,
+                    callback: function(hasLoad, poiId, viewBounds) {
+                        mvce.C.createPanoInfowindow(hasLoad, poiId, viewBounds);
+                    }
+                });
+            });
+
+            PCMAP.events.on('pano-highlightPoiItem', function(data) {
+                var poiId = data.data;
+                if ($("#marker-" + poiId).parent().hasClass("selected")) {
+                    return;
+                } else {
+                    $(".amap-marker").removeClass("highlight");
+                    if (poiId) {
+                        $("#marker-" + poiId).parent().addClass("highlight").css("z-index", "13");
+                    }
+                }
+            });
+            PCMAP.events.on('pano-unhighlightPoiItem', function(data) {
+                var poiId = data.data;
+                if ($("#marker-" + poiId).parent().hasClass("selected")) {
+                    return;
+                } else {
+                    if (poiId) {
+                        $("#marker-" + poiId).parent().removeClass("highlight").css("z-index", "10");
+                    } else {
+                        $(".amap-marker").removeClass("highlight");
+                    }
+                }
+            });
+            PCMAP.events.on('pano-selectPoiItem', function(data) {
+                var poiId = data.data;
+                $(".amap-marker").removeClass("selected").removeClass("highlight");
+                if (poiId) {
+                    $("#marker-" + poiId).parent().addClass("selected").css("z-index", "12");
+                }
+            });
+            PCMAP.events.on('pano-unselectPoiItem', function(data) {
+                var poiId = data.data;
+                if (poiId) {
+                    $("#marker-" + poiId).parent().removeClass("selected").css("z-index", "10");
+                } else {
+                    $(".amap-marker").removeClass("selected");
+                }
+            });
+            PCMAP.events.on('pano-changeHeading', function(data) {
+                var heading = data.data;
+                mvce.C.setHeading(heading);
+            });
+            PCMAP.events.on('pano-getMinimapCenter', function() {
+                var center = mvce.M.panoMap.getCenter();
+                mvce.M.panoMapCenter = center;
+            });
+            PCMAP.events.on('pano-setMinimapCenter', function(data) {
+                var pos = data.data || mvce.M.panoMapCenter;
+                mvce.M.panoMap.setCenter(pos);
+            });
+            PCMAP.events.on('pano-setMinimapZoom', function(data) {
+                var zoom = data.data;
+                mvce.M.panoMap.setZoom(zoom);
+            });
+            PCMAP.events.on('pano-miniMapZoomin', function() {
+                mvce.M.panoMap.zoomIn();
+            });
+            PCMAP.events.on('pano-miniMapZoomout', function() {
+                mvce.M.panoMap.zoomOut();
+            });
+            PCMAP.events.on('pano-addTileLayerSatellite', function() {
+                var id = "satellite";
+                if (!mvce.M.panoTileLayer[id]) {
+                    mvce.M.panoTileLayer[id] = new AMap.TileLayer.Satellite({
+                        detectRetina: false
+                        // zIndex: 1
+                    }).setMap(mvce.M.panoMap);
+                } else {
+                    mvce.M.panoTileLayer[id].setMap(mvce.M.panoMap);
+                }
+                $("#map").find(".amap-copyright").html('©2014 高德软件 审图号GS(2014)6002号 | 京ICP证 070711号 | 甲测资字11002004 | Image© DigitalGlobe＆chinasiwei');
+                mvce.M.panoTileLayer.defaultLayer.setMap(null);
+            });
+            PCMAP.events.on('pano-removeTileLayerSatellite', function() {
+                var id = "satellite";
+                mvce.M.panoTileLayer[id] && mvce.M.panoTileLayer[id].setMap(null);
+                mvce.M.panoTileLayer.defaultLayer.setMap(mvce.M.panoMap);
+                $("#map").find(".amap-copyright").html('©2014 高德软件 审图号GS(2014)6002号 | 京ICP证 070711号 | 甲测资字11002004');
+            });
+            $("#minimap").on("mouseover", ".marker-marker-poi", function() {
+                var poiId = $(this).attr("id").split("-")[1];
+                PCMAP.events.emit('pano-highlightPoiItem', poiId);
+                PCMAP.events.emit('map-highlightPoiItem', poiId);
+                PCMAP.events.emit('main-highlightPoiItem', poiId);
+            }).on("mouseout", ".marker-marker-poi", function() {
+                var poiId = $(this).attr("id").split("-")[1];
+                PCMAP.events.emit('pano-unhighlightPoiItem', poiId);
+                PCMAP.events.emit('map-unhighlightPoiItem', poiId);
+                PCMAP.events.emit('main-unhighlightPoiItem', poiId);
+            });
+        }
+    };
+
+    function _addEvent(obj, type, cb) {
+        AMap.event.addListener(obj, type, cb);
+    }
+
+    function _uaMatch(versions) {
+        var ua = navigator.userAgent.toLowerCase();
+        for (var i = 0; i < versions.length; i++) {
+            if (ua.indexOf(versions[i]) > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    mvce.E.bindEvent();
+
+    mvce.C.initPanoMap();
+    </script>
+</body>
+</html>

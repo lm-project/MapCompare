@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>地图比对工具</title>
+<link href='css/index.css' rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="js/theme/default/style.css"/> 
+</head> 
+<body>
+	  <div id="baiduMap" style="display:block;">
+		<!-- 	工具栏 -->
+		<div class="mapTitel">
+		  	<div class="mapZoom">级别：<span id="bdZoom" ></span> 	</div>
+		  	<div id="bmapName"><span>百度地图</span></div>		
+			<div class="bd_Btn" id="bdFullScreen">
+				<span class="toolBtn_img" style="background-position: -170px 0"></span>
+				<span id="tool_fullScrF" class="toolBtn_cont">全屏</span>
+			</div>
+			<div class="bd_Btn" id="bdTool" >
+		   	 	<span class="toolBtn_img" style="background-position: -69px 0"></span>
+		   	 	<span class="toolBtn_cont">工具</span>
+		   	 	<div  id="toolsbox">
+					<span class="toolsbox_item"><b class="tool_item_img" style="background-position: -86px -120px;"></b>测距</span>			
+					<span class="toolsbox_item"><b class="tool_item_img" style="background-position: -118px -120px;"></b>标记</span>
+					<span class="toolsbox_item"><b class="tool_item_img" style="background-position: -135px -120px;"></b>分享</span>
+				</div>
+			</div>	
+			<div class="bd_Btn" style="width:65px;">
+				<span class="toolBtn_img" style="background-position: -54px 0"></span>
+				<span class="toolBtn_cont">路况信息</span>
+			</div>
+		    <div class="bd_Btn" style="width: 80px;">
+			 	<span class="toolBtn_img" style="background-position: -37px 0"></span>
+			 	<span class="toolBtn_cont">视野内搜索</span>
+			</div>
+			<div class="bd_Btn" id="bd3D">三维</div>
+			<div class="bd_Btn" id="bdStrView">街景</div>
+			<div class="bd_Btn" id="bdSalite">卫星</div>
+			<div class="bd_Btn" id="bdMap">地图</div>
+	    </div>
+	    <div id="divBaiduMap"  class="allMaps"></div>
+	    <div id="divBaiduPano" class="allMaps"></div>
+	    <div id="Bresult"></div> 
+	    
+ </div>
+ <script type="text/javascript">
+ 
+
+ </script>
+<!-- 百度秘钥 -->
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=A9AGCgtSHywDDpcy1qM4vhGC"&services=true"></script>
+ <!-- 百度本地文件 -->
+ <script type="text/javascript" src="js/baidu.js"></script>
+ <!-- 百度信息窗口库 -->
+<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
+ <!-- 百度测距库 -->
+ <script type="text/javascript" src="http://api.map.baidu.com/library/DistanceTool/1.2/src/DistanceTool_min.js"></script>
+ <!-- 百度城市列表库 -->
+ <script type="text/javascript" src="http://api.map.baidu.com/library/CityList/1.2/src/CityList_min.js"></script>
+ <!-- 百度坐标转换 -->
+ </body>
+</html>

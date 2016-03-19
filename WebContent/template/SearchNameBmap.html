@@ -1,0 +1,39 @@
+<table id="searchResultsBmapTable" class="resultTable">
+	<thead>
+	<tr>
+		<th style="width:25px;">序号</th>
+		<th title="点击查看完整名称">名称</th>
+		<th title="点击查看完整地址">地址</th>
+		<th title="点击查看完整坐标">坐标</th>
+	    <th title="点击查看完整电话">电话</th>
+	    <th title="点击查看完整邮编">邮编</th>
+	    <th title="所在城市">所在城市</th>
+	   	<th title="类型/POI的标签">POI标签</th>
+	   	<th title="POI的简介">详情</th>
+	   	<th title="POI的简介">官网搜索</th>
+	 </tr>
+	 </thead>
+	 {{#localPoi}}
+    	<tr>
+    	<td>{{addOne @index}}</td>
+ 		<td>{{havaVal title}}</td>
+		<td>{{havaVal address}}</td>
+		<td>{{havaVal point}}</td>
+		<td>{{havaVal phoneNumber}}</td>
+		<td>{{havaVal postcode}}</td>
+		<td>{{havaVal province}}{{havaVal city}}</td>
+		<td>{{havaVal tags}}</td>
+		<td><a href="{{detailUrl}}" target="_black">详情</a></td>
+		<td><a href="{{url}}" target="_black">官网搜索</a></td>
+ 		</tr>
+ 	{{/localPoi}}
+</table>
+
+<div id='exportRelBmapDiv'>
+<span>总记录数：{{getNumPois}}</span><span style="margin-left: 20px;"></span>总页数：<span id="goPageBmapTotal">{{getNumPages}}</span>
+<span id="page">
+	<button class="goPageBmap">上一页</button>
+	<input id="goPageBmapInput" type="text" value="1" style="width:30px;text-align: center;"/><button class="goPageBmap">GO</button>
+	<button class="goPageBmap">下一页</button>
+</span>
+</div>       

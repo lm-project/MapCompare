@@ -1,0 +1,498 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>地图比对工具</title>
+<link href='css/index.css' rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="js/theme/default/style.css"/> 
+</head> 
+<body>
+ <div id="mapTop">
+       <!-- 搜索 -->
+	<div id="divSearchBox">
+          <div id="searchOption">
+            <div id="place"      class="selected" >名称</div>
+            <div id="streetView" class="select">街景</div>
+ 			<div id="busRoute"   class="select">公交</div>
+		    <div id="driveRoute" class="select">驾车</div>
+		    <div id="coordinate" class="select">坐标</div>
+			<!-- 坐标策略-->
+			<select id="coorPolicy">
+					<option value="local">位置</option>
+					<option value="streeView">街景</option>
+			</select> 
+		 </div>
+		<!-- 搜索框和按钮 -->
+        <div id="serInputDiv">
+			<div>          
+          	    <input id="txtKeywords" class="SearchInput"  type="text" autocomplete="off"  value="详细poi/城市/商圈/位置" />
+          	</div>
+          	<div id="twoSerInput">
+          	   <input id="firstValue"  class="SearchInput" type="text" autocomplete="off">
+               <input id="secondValue" class="SearchInput" type="text" autocomplete="off">
+            </div>
+            <div>
+               <button id="btnSearch" name="btnSearch" type="button"></button>
+            </div>
+       </div>
+       <!-- 地图切换 -->
+    <div id="tMap">
+		<input class="mapNameBnt" type="button" id="bMap" value="百度地图" >
+		<input class="mapNameBnt" type="button" id="sMap" value="腾讯地图" >
+    	<input class="mapNameBnt" type="button" id="gMap" value="谷歌地图" >
+    	<input class="mapNameBnt" type="button" id="iMap" value="影像地图" >
+	</div>
+    </div>
+    <!-- 高德输入提示-->
+    <div id="result1"></div>  
+    
+ </div>
+  <div id="allToolbar">
+  <!-- 城市列表 -->
+  	<div class="selCityList">
+		  <strong id="curCity">北京市</strong> 
+		  [<a id="curCityText" href="javascript:void(0)">更换城市</a>]
+	</div>
+	 <!-- 天气预报 -->
+ 	<!-- <div style="position:absolute;left:20px;"><iframe name="weather_inc" src="http://tianqi.xixik.com/cframe/10" width="300" height="26" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" ></iframe></div>  -->
+   	<!-- 视野内搜索 -->
+   	<div class="alltoolbtn">
+	   	<div class="alltools" style="width:85px;">
+	   		<span class="alltoolImg" style="background-position: -37px 0;"></span>
+	   		<span class="allToolText">视野内搜索</span>
+    		<div id="insightSearchDiv" >
+    			<div class="region_srh_box">
+					<div class="region_srh_title">
+						<span class="srh-title">在屏幕范围内搜索</span>
+						<span class="srh_close"></span>
+					</div>
+					<div class="srh_list_item">
+						<div class="item_title">餐饮美食</div>
+						<div class="item-category">
+							<a href="javascript:void(0)" class="item-category-item" >川菜</a>
+							<a href="javascript:void(0)" class="item-category-item" >湘菜</a>
+							<a href="javascript:void(0)" class="item-category-item" >西餐</a>
+							<a href="javascript:void(0)" class="item-category-item" >家常菜</a>
+							<a href="javascript:void(0)" class="item-category-item" >特色小吃</a>
+							<a href="javascript:void(0)" class="item-category-item" >肯德基</a>
+							<a href="javascript:void(0)" class="item-category-item" >麦当劳</a>
+							<div class="clr"></div>
+						</div>
+					</div>
+					<div class="srh_list_item">
+						<div class="item_title">生活便利</div>
+						<div class="item-category">
+							<a href="javascript:void(0)" class="item-category-item" >超市</a>
+							<a href="javascript:void(0)" class="item-category-item" >银行</a>
+							<a href="javascript:void(0)" class="item-category-item" >ATM</a>
+							<a href="javascript:void(0)" class="item-category-item" >学校</a>
+							<a href="javascript:void(0)" class="item-category-item" >医院</a>
+							<a href="javascript:void(0)" class="item-category-item" >药店</a>
+							<a href="javascript:void(0)" class="item-category-item" >4S店</a>
+							<a href="javascript:void(0)" class="item-category-item" >商场</a>
+							<a href="javascript:void(0)" class="item-category-item" >网吧</a>
+							<div class="clr"></div>
+						</div>
+					</div>
+					<div class="srh_list_item">
+						<div class="item_title">公共交通</div>
+						<div class="item-category">
+							<a href="javascript:void(0)" class="item-category-item" >地铁</a>
+							<a href="javascript:void(0)" class="item-category-item" >机场</a>
+							<a href="javascript:void(0)" class="item-category-item" >停车场</a>
+							<a href="javascript:void(0)" class="item-category-item" >加油站</a>
+							<a href="javascript:void(0)" class="item-category-item" >公交车站</a>
+							<a href="javascript:void(0)" class="item-category-item" >长途汽车站</a>
+							<a href="javascript:void(0)" class="item-category-item" >火车售票点</a>
+							<div class="clr"></div>
+						</div>
+					</div>
+					<div class="srh_list_item">
+						<div class="item_title">休闲娱乐</div>
+						<div class="item-category">
+							<a href="javascript:void(0)" class="item-category-item" >电影院</a>
+							<a href="javascript:void(0)" class="item-category-item" >酒店</a>
+							<a href="javascript:void(0)" class="item-category-item" >KTV</a>
+							<a href="javascript:void(0)" class="item-category-item" >健康中心</a>
+							<a href="javascript:void(0)" class="item-category-item" >酒吧</a>
+							<a href="javascript:void(0)" class="item-category-item" >公园</a>
+							<a href="javascript:void(0)" class="item-category-item" >咖啡厅</a>
+							<a href="javascript:void(0)" class="item-category-item" >茶苑</a>
+							<div class="clr"></div>
+						</div>
+					</div>
+					<div class="clr"></div>
+				</div>
+				<div class="region-srh-input">
+					<input type="text" class="region-srh-ipt" id="keywords">	
+					<input onclick="insightSearch(document.getElementById('keywords').value);" id="insightSearcheBtn" type="button" class="region-srh-btn" value="搜索">	
+					<div class="clr"></div>
+				</div>
+			</div>
+	   	</div>
+	    <div class="alltools" style="width:50px;">
+	    	<span class="alltoolmtImg" style="background-position: 0px -221px;"></span>
+	        <span class="allToolText">地&nbsp图</span>
+	    </div>
+	    <div class="alltools" style="width:50px;">
+	    	<span class="alltoolmtImg" style="background-position: 0px -177px;"></span>
+	    	<span class="allToolText">卫&nbsp星</span>
+	    </div>
+		<div class="alltools" style="width:50px;">
+			<span class="alltoolmtImg" style="background-position: 0px -131px;"></span> 
+			<span class="allToolText">三&nbsp维</span>
+		</div>
+		<div class="alltools" style="width:50px;">
+			<img alt="" src="image/dixingImg.png" style="width:13px;height: 13px;position: absolute;top:7px;left:1px;">
+			<span class="allToolText">地&nbsp形</span>
+		</div>
+		<div class="alltools" style="width:50px;" title="打开街景图层" >
+			<img alt="" src="image/streetview_img.gif" style="height: 18px;position: absolute;top:3px;left:1px;">
+			<span class="allToolText">街&nbsp景</span>
+		</div>
+		<div class="alltools" style="width:70px;" title="关闭/打开" >
+			<span class="alltoolImg" style="background-position: -54px 0;"></span>
+			<span class="allToolText" id="Roadtext">实时路况</span>
+		</div>
+		<div class="alltools" style="width:70px;" id="linkage">
+			<img alt="" src="image/curonImg.PNG" style="height: 15px;position: absolute;top:5px;left:1px;">
+			<span class="allToolText" id="curLinkText">鼠标联动</span>
+		 </div> 
+	 	<div class="alltools" style="width:50px;">	 		
+	 		<span class="alltoolImg" style="background-position: -86px -120px;"></span>
+	 		<span class="allToolText">测&nbsp距</span>
+	 	</div>
+		<div class="alltools" style="width:50px;" title="清空地图上的所有标记" >
+			<span class="alltoolImg" style="background-position: -20px -19px;"></span>
+			<span class="allToolText">清&nbsp空</span>
+		</div>
+		<div class="alltools" style="width:50px;">
+			<span class="alltoolImg" style="background-position: -102px -120px;"></span>
+			<span class="allToolText">截&nbsp图</span>
+		</div> 
+		<div class="alltools" style="width:74px;">
+			<span class="alltoolImg" style="background-position: 0px 0px; position: left:3px;top:5px;"></span>
+			<span class="allToolText"><a href="feedback.jsp" target="_blank" style="text-decoration: none;color: black;">问题反馈</a></span>
+		</div> 
+		<div class="alltools" style="width:50px;">
+			<span class="alltoolImg" style="background-position: -135px -2px;"></span>
+			<span class="allToolText">帮&nbsp助</span>
+		</div> 
+ 	</div>
+ </div>      	
+<!-- 	end mapTop -->
+ <div id="mapCenter">
+ 	<!--高德地图容器-->
+	<div id="gaodeMap" class="mapContainer">
+		<div class="mapTitel">
+			<div id="amapName"><span >高德地图</span></div>
+			<div  class="gd_tool_bar"><span>级别：</span><span id="gdMapZoom"></span></div>
+			<div class="gd_tool_bar" id="gdFullScreen">全屏</div>
+			<div  class="gd_tool_bar" >
+				<span>工具</span>
+				 <img alt="" src="image/gd_tab_03.png">
+				<div id="aToolBar">
+				   <div class="gdTool" style="background-position: 8px -47px;">视野内搜索</div>
+				   <div class="gdTool" style="background-position: 8px 9px;">测距</div>
+				   <div class="gdTool" style="background-position: 8px -19px;">标记</div>
+		       </div> 
+			</div>
+			<div  class="gd_tool_bar" id="aStreetViewBar">街景</div>
+			<div  class="gd_tool_bar" id="aSaliteBar">卫星</div>
+		    <div  class="gd_tool_bar" id="aMapBar">地图</div>
+			
+		</div>
+		<!-- 城市列表 -->
+	    <div id="cityList" style="display: none;">
+       	  <div class="ciTytitle">
+       	 	<span>城市列表 </span>	
+       	 	<div id="closeCityList" title="关闭城市列表" onclick="document.getElementById('cityList').style.display='none';"></div>
+       	  </div>
+       	  <!-- 设置默认城市 -->
+       	  <div id="set_default_city">
+       	    <div id="CurCityInfo">
+       	        <span>当前城市：</span><span id="cur_city">北京市</span>
+       	      <a id="SetDefCity" href="javascript:void(0);" onclick="setDefuCity(curCityName);return false;" >设为默认城市</a>
+       	    </div>
+       	    <div id="DefCityInfo">
+       	      <span>您默认的城市是：</span>
+       	      <span id="defCityIs" >北京市</span>
+       	      <span>[<a href="javascript:void(0);" onclick="delCookie('curCityName');return false;">删除</a>]</span>
+       	    </div>
+       	  </div>
+       	  <!-- 城市搜索-->
+       	  <div class="cityListSearch">
+       	  	<input id="bdcitySearch" type="text" value="输入城市名" onfocus="this.value='';">
+       	  	<span  id="citylistSeaBnt" onclick="bdcitySearch(document.getElementById('bdcitySearch').value);" >搜索</span>
+       	  </div>
+       	  <div id="citylist_container" ></div>
+         </div> 
+		<div id="divAMap"      class="allMaps"></div>
+		<div id="divAmapPano"  class="allMaps"></div>
+		<div id="Aresult"></div>  
+	</div>
+	<div id="centerDiv"></div>
+	<div class="mapContainer">	  
+		<iframe id="iframe" src="bmap.html" width="100%"  height="600px" scrolling="no" frameborder="0" marginheight=0px marginwidth=0px   seamless="seamless"></iframe>
+	</div>
+  </div>
+  
+ <script type="text/javascript">
+   window.onload=function(){
+	  var iframe=document.getElementById("iframe")
+	  var wIframe=iframe.contentWindow;
+	  document.getElementById("bMap").onclick=function(){
+		  iframe.src="bmap.html";
+	  }
+	  
+	  /*  alert(1234);
+	  var idValue = iframe.document.getElementById("bdFullScreen");
+	  alert(idValue); */
+   }
+   </script>
+  <!-- 帮助 -->
+ <div id='help'>
+ 	 <div id="helpTitle">
+	 	 <span>MapCompare使用说明</span>
+	 	 <a><span></span><b>关闭</b></a>
+	 </div>
+	 <div id="helpNavi">
+		 <div><b><span></span>使用说明目录</b></div>
+		 <div>
+		 	 <div id="ss" class="helpCategory">
+			   <a href="#search_show">
+			 	  <img src="image/61.gif" ><b>搜索</b>
+			   </a>
+			 </div>	
+			 <div id="allSearch" class="helpItem">
+				<div><a href="#name_search"><span></span>名称搜索</a></div>
+				<div><a href="#street_search"><span></span>街景搜索</a></div>
+				<div><a href="#busDvi_search"><span></span>公交搜索</a></div>
+				<div><a href="#busDvi_search"><span></span>驾车搜索</a></div>
+				<div><a href="#coor_search"><span></span>坐标搜索</a></div>
+			</div>
+		</div>
+		<div>
+			<div id="tt" class="helpCategory">
+			  <a href="#tools_show" >
+				<img src="image/61.gif"><b>导航条</b>
+			  </a>
+			</div >
+			<div id="allMapTool" class="helpItem" style="display: none;">
+				<div><a href="#cityListHelp"><span></span>城市列表</a></div>
+				<div><a href="#insight_search"><span></span>视野内搜索</a></div>
+				<div><a href="#changeMap"><span></span>地图切换</a></div>
+				<div><a href="#sateMap"><span></span>卫星切换</a></div>
+				<div><a href="#street_tool"><span></span>街景切换</a></div>
+				<div><a href="#3DMap"><span></span>三维切换</a></div>
+				<div><a href="#dixingMap"><span></span>地形切换</a></div>
+				<div><a href="#roadInfo"><span></span>实时路况</a></div>
+				<div><a href="#cursorLink"><span></span>鼠标联动</a></div>
+				<div><a href="#distanceTool"><span></span>测       距</a></div>
+				<div><a href="#clearMap"><span></span>清       空</a></div>
+				<div><a href="#cutImgTools"><span></span>截       图</a></div>
+				<div><a href="#proFeedback"><span></span>问题反馈</a></div>
+				<div><a href="#useHelp"><span></span>帮       助</a></div>
+			 </div>
+		 </div>
+	 </div>
+	 <div id="helpExpatiation">
+	   <div style="padding-top: 10px;font-weight: bold;">欢迎来到<span style="letter-spacing: 0px;">MapCompare</span>!</div>
+	   <div>
+	   		<span style="letter-spacing: 0px;">MapCompare</span>是调用高德、百度、谷歌、腾讯四家地图的API实现的“地图对比工具”，此工具可以方便大家对比竞品地图，获取他方数据。
+	   		此工具现在已经部署在了昌平办公网。大家在昌平都可以访问到。希望能对大家能有所帮助。
+	   </div>
+	   <div>为了能够好的为您服务，请耐心阅读完《<span style="letter-spacing: 0px;">MapCompare</span>使用说明》。</div>
+	   <div>功能上如有问题，或者有好的建议，请及时反馈，谢谢!</div>
+	   <div>访问地址：<a href="http://172.16.41.68:8088/MapCompare/"><span style="letter-spacing: 0px;">http://172.16.41.42:8080/MapCompare/WebContent/</span></a></div>
+	   <div style="color:red;">
+	   	<div>相对于之前版本，本次主要增加了以下功能：</div>
+	   	<div>(1)影像卫星地图的显示</div>
+	   	<div>(2)问题反馈，如有任何问题，请点击问题反馈，注册登录提交您的问题</div>
+	   	<div>(3)鼠标联动，鼠标联动不仅可以联动地图或者街景之间的联动，而且可以联动地图与街景之间的联动</div>
+	    <div>存在的问题：</div>
+	    <div>（1）google地图由于某些原因现在不能显示</div>
+	   </div>
+	   <b>------------------------------------ 功能说明：--------------------------------</b>
+       <div id="search_show">
+	      <div class="firstTitle">一、搜索功能：</div> 
+	      <div id="name_search">
+	      	 <span class="secondTitle">1.名称搜索:</span>
+	      	 <div><hr></div>
+         	 <div >针对详细poi、城市、商圈、位置的名称搜索；比如：西安、天安门、北京大学等。</div>
+         	 <div>注意事项：</div>
+             <div>（1）搜索poi时，尽量使用下拉框提示的信息，否则可能搜不到；</div>
+             <div>（2）下拉浏览器滚动条可以查看搜索结果，鼠标点击，自动定位的适合的视野；</div>                              
+             <div>（3）在搜索结果中基本显示了对应地图API中所有的属性，便于各个地图搜索结果的详细对比；</div>                              
+             <div>（4）在搜索结果中点击标题栏可以显示此属性的完整信息；</div>                              
+             <div>（5）在搜索结果中实现了高德与其他地图的功能联动，比如：点击高德地图的下一页，对应右边显示的那个地图也会查询下一页的结果；</div>                              
+             <div>（6）在搜索结果最后一行，有copy、exel、pdf等按钮，点击可以实现将搜索结果导出到对应格式的文件中。</div>                              
+	      </div>
+	      <div></div>
+	      <div id="street_search">
+	      	 <span class="secondTitle">2.街景搜索：</span>
+	      	 <hr>
+        	 <div>针对位置的名称搜索,比如：杭州市...</div>
+        	 <div>注意事项：</div>
+        	 <div>（1）高德街景目前支持杭州、南京等地；</div>
+        	 <div>（2）百度街景目前支持北京、上海等地；</div>
+        	 <div>（3）腾讯街景一二线主要的城市都支持；</div>
+        	 <div>（4）街景搜索得到的结果可能不是十分的准确，因为它是根据您所搜索那个点的500米范围内进行搜索。</div>
+        	 <div>（5）如果左右俩个地图的街景同时打开，则可实现对街景的联动，详见导航条的鼠标联动</div>
+	      </div>
+	      <div id="busDvi_search">
+	      	<span class="secondTitle">3.公交/驾车搜索：</span>
+	      	 <hr>
+        	 <div>针对全国公交/驾车的换乘查询及路线查询。</div>
+        	 <div>注意事项：</div>
+        	 <div>（1）在搜索栏最右边的下拉框中可以选择公交/驾车策略；</div>
+        	 <div>（2）下拉浏览器滚动条可以查看搜索结果，鼠标点击换路线，驾车可以查看详细的路段；</div>
+        	 <div>（3）目前，只能支持在同一城市的公交查询；</div>
+        	 <div>（3）公交/驾车策略默认为“最快捷”；</div>
+	       </div>
+	      <div id="coor_search">
+	      	  <span class="secondTitle">4.坐标搜索：</span>
+	      	  <hr>
+        	  <div>根据经纬度定位百度坐标、gps坐标和国家加密坐标（火星坐标）的位置 。</div>
+        	  <div>注意事项：</div>
+	          <div>（1）原始坐标是指gps经纬度；</div>
+	          <div>（2）百度坐标是指百度自定义的坐标（即在GCJ-02的基础上百度又进行一次加密的坐标）；</div>
+	          <div>（3）国家加密坐标：是指GCJ-02，俗称火星坐标</div>
+	          <div>（4）经度的坐标范围为-180——180，纬度的范围为：-85——85；</div>
+	          <div>（5）选择下拉框的街景可以根据经纬度搜索该点在500米范围内的街景；</div>
+	       </div>
+       </div>
+	导航条说明 
+	   <div id="tools_show">  
+	   	  <div class="firstTitle">二、导航栏功能：</div> 
+	   	  <div id="cityListHelp"> 
+          	 <span class="secondTitle">1.城市列表：</span>
+	      	  <hr>     	 
+	       	 <div>针对城市的查询和设置等。</div>
+	         <div>注意事项：</div>
+	         <div>（1）导航栏的最左边显示的目前地图展示的城市名</div>
+	         <div>（2）点击“更换城市”可打开或关闭城市列表；</div>
+	         <div>（3）点击列表里的城市名或者在搜索框里输入城市名均可定位到相应的城市；</div>
+	         <div>（4）点击设置默认城市，在下此打开的时候，地图以默认的城市定位。</div>
+       	  </div>   
+          <div id="insight_search"> 
+          	 <span class="secondTitle">2.视野内搜索：</span>
+	      	  <hr>     	 
+	       	 <div>针对poi的泛搜索，比如银行，饭店等。</div>
+	         <div>注意事项：</div>
+	         <div>（1）以当前地图的中心点为中心2000米范围内进行搜索；</div>
+	         <div>（2）搜索后，下拉浏览器滚动条查看搜索结果</div>
+       	  </div>
+       	 <div id="changeMap">
+       	 	 <span class="secondTitle">3.地图：</span>
+	      	  <hr>     	 
+	       	 <div>显示普通地图</div>
+	         <div>注意事项：</div>
+       	 	 <div>（1）点击地图按钮可将地图类型为卫星、三维、地形、街景等转换到普通的街道地图</div>       	 	 
+    	 </div>
+      	 <div id="sateMap">
+      	 	 <span class="secondTitle">4.卫星：</span>
+	      	  <hr>     	 
+	       	 <div>显示卫星地图层。</div>
+	         <div>注意事项：</div>
+	         <div>（1）点击卫星按钮可将地图类型为普通地图、三维、地形、街景等转化到普通的卫星地图层</div>
+	         <div>（2）为了看的更清楚，显示卫星地图层时，还添加了路网层</div>
+      	 </div>
+      	 <div id="street_tool">
+      	 	<span class="secondTitle">5.街景：</span>
+	      	  <hr>     	 
+	       	 <div>针对点击街景图层的街景显示。</div>
+	         <div>注意事项：</div>
+       	 	 <div> （1）点击街景图层显示点击点的街景</div>
+       	 	 <div> （2）点击高德某个位置的街景层，腾讯或百度也同时出现该点的街景</div>
+       	 </div>
+      	 <div id="3DMap">
+      	 	 <span class="secondTitle">6.三维：</span>
+	      	  <hr>     	 
+	       	 <div>显示3D地图层。</div>
+	         <div>注意事项：</div>
+	         <div>（1）点击三维按钮可将地图类型为普通地图、卫星、地形、街景等转换到三维地图层；</div>
+	         <div>（2）三维只有百度有（部分区域，比如北京五环内）；</div>
+      	 </div>
+      	 <div id="dixingMap">
+      	 	 <span class="secondTitle">7.地形：</span>
+	      	  <hr>     	 
+	       	 <div>显示地形地图层。</div>
+	         <div>注意事项：</div>
+	         <div>（1）点击地形按钮可将地图类型为普通地图、卫星、三维、街景等转换到地形地图层；</div>
+	         <div>（2）地形只有谷歌部分地区有；</div>
+      	 </div>       	 
+       	 <div id="roadInfo">
+       	 	 <span class="secondTitle">8.实时路况：</span>
+	      	 <hr>     	 
+	       	 <div>针对道路的畅通状况显示道路。</div>
+	         <div>注意事项：</div>
+       	  	 <div>（1）  红色区域代表拥堵；</div>
+       	  	 <div>（2） 黄色区域代表缓行；</div>
+       	  	 <div>（3） 绿色区域代表畅通；</div>
+       	  	 <div>（4）关闭实时路况，再点一次实时路况按钮 </div>
+      	 </div>
+       	 <div id="cursorLink">
+       	 	<span class="secondTitle">9.鼠标联动：</span>
+	      	 <hr>     	 
+	       	 <div>针对鼠标操作地图的功能，即地图或者街景随着一方的联动，另一方也随之做出相应的动作。</div>
+	         <div>注意事项：</div>
+             <div>（1）此功能较前版本有所改动，不仅普通地图之间可以联动，普通地图与街景地图也可以联动</div>
+             <div>（2）普通地图之间联动，鼠标左键双击任意一个地图，左右两边地图级别放大；</div>
+             <div>（3）普通地图之间联动，鼠标向前滚动地图级别放大，向后滚动缩小；</div>
+             <div>（4）普通地图之间联动，鼠标按下去拖拽，显示的两个地图分别向拖拽的方向移动，并且地图的中心点坐标会保持一致</div>
+             <div>（5）街景地图之间联动，只能操作高德地图是其他地图按照操作一方联动，比如调整视角，变换街景等</div>
+             <div>（7）地图与街景之间联动，拖动地图，街景转换到地图的中心点附近的位置；拖动街景，地图会以当前街景的坐标为中心点显示</div>
+             <div>（8）地图与街景之间的联动，尽量使地图的缩放级别变为最大，这样使得地图的变化更明显，便于观察</div>
+             <div>（9）不执行此功能时，请务必再点击一次打开联动的那个按钮关闭鼠标联动，否则会影响其他的操作</div>
+      	 </div>
+       	 <div id="distanceTool">
+       	 	  <span class="secondTitle">10.测距：</span>
+	      	 <hr>  
+       	 	  <div>根据地图的比例尺算出该段的实际距离。</div>
+       	 	 <div>注意事项：</div>
+       	 	  <div>（1）测距完毕后，点击右键或者双击左键完成测距；</div>
+     	 </div>
+       	 <div id="clearMap">
+       	 	  <span class="secondTitle">11.清空：</span>
+	      	  <hr>  
+      	 	  <div>针对清空地图上所有的覆盖物和搜索结果</div>	    	
+       	 </div>
+       	 <div id="cutImgTools">
+       	 	  <span class="secondTitle">12.截图：</span>
+	      	  <hr>  
+       	 	  <div>截取屏幕某块保存为图片</div>
+       	 	  <div>注意事项：</div>
+       	 	  <div>（1）点击测距按钮后，按住左键拖转，绘制图形；</div>     	 
+       	 	  <div>（2）绘制好图形，您可以选择保存，确定，取消三个按钮；</div>     	 
+       	 	  <div>（3）保存：就是将绘制好的图片保存到桌面，文件名以时间的年月日时分秒命名；</div>     	 
+       	 	  <div>（4）确定：就是将绘制好的图片复制到剪切板，您可以复制到任何你想要的地方；</div>     	 
+       	 	  <div>（5）取消：就是退出截屏；</div>     	 
+       	 	  <div>（6）如果您绘制好了图片后，感觉不是自己想要的，可以继续点击左键绘制，无需进行任何操作，直接点击左键即可重新绘制；</div>     	 
+       	 	  <div>（7）取消：截屏的快捷键为ALT键；</div>     	 
+       	 </div>
+       	 	 <div id="proFeedback">
+       	 	  <span class="secondTitle">13.问题反馈：</span>
+	      	  <hr>  
+       	 	  <div>如果您对<span>MapCompare</span>有任何疑惑，都可以注册登录MapCompare问题反馈，提交您的疑惑，比如：存在的问题、使用方法、需求意见等</div>
+              </div>     
+       	 <div id="useHelp">
+       	 	  <span class="secondTitle">14.帮助：</span>
+	      	  <hr>  
+       	 	  <div>了解<span>MapCompare</span>的使用方法和规范</div>
+       	 	  <div>注意事项：</div>
+       	 	  <div>（1）如果您是第一次登陆，系统会默认显示MapCompare使用说明，此后，如果你不清空浏览器缓存的话，该说明就不是显示了，如果你要查看，请点击帮助按钮。</div>
+      </div>     
+       <div>
+      	<p>技术创新部：刘振涛</p>
+		<p>邮箱：<a href="mailto:i-liuzhentao@autonavi.com">i-liuzhentao@autonavi.com</a></p>
+        <p style="margin-right: 100px;">2014年5月4日</p>
+       </div>     
+	 </div>
+  </div>
+<!-- jquery插件 -->
+<script type="text/javascript" src="jQuery/jquery-1.9.1.min.js"></script>
+  <!-- 高德 -->
+<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.2&key=3541df62738b1ccf1c0879baf080250c"></script> 
+ </body>
+</html>

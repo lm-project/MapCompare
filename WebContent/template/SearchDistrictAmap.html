@@ -1,0 +1,21 @@
+<table id="searchResults" class="resultTable">
+	<thead>
+	   <tr>
+		  <th style="width:25px;">序号</th>
+		  <th>行政区名称</th>
+		  <th>城市中心点</th>
+		  <th>行政区划级别</th>
+		  <th>行政区边界坐标集合</th>
+	    </tr>
+	</thead>
+	{{#each districtList}}
+	<tr>
+		<td>{{addOne @index}}</td>
+		<td>{{havaVal name}}</td>
+		<td>{{havaVal center}}</td>
+		<td>{{havaVal level}}</td>
+		<td>{{havaVal boundaries}}</td>
+	</tr>
+ 	{{/each}}
+</table>
+            

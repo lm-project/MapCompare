@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>地图比对工具</title>
+<link href='css/index.css' rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="js/theme/default/style.css"/> 
+</head> 
+<body>
+ <div id="sosoMap">
+   <div class="mapTitel">
+   	<div class="mapZoom">级别：<span id="sosoZoom" ></span></div>
+   	<div id="qqMaptpyeBnt">
+	  	<div class="qq_bnt" style=" background-position: -336px -300px;" id="opensosoMap"></div>
+	  	<div class="qq_bnt" style=" background-position: -269px -176px;" id="opensosoLandform"></div>
+	  	<div class="qq_bnt" style=" background-position: -380px -300px;" id="opensosoSatellite" ></div>
+	  	<div class="qq_bnt" style=" background-position: -405px -225px;" id="opensosoPano">
+	  		<img alt="" src="image/streetview_img.gif">
+	  	</div>
+	</div>
+   	<div id="smapName"><span>腾讯地图</span></div>
+    <div id="qqBarBnt">
+     	<div class="qq_bnt" style=" background-position: 0px -300px;width: 91px;" title="在当前地图范围内搜索"></div>
+	  	<div class="qq_bnt" style=" background-position: -135px -300px;" title="测量一段路线的距离"></div>
+		<div class="qq_bnt" style=" background-position: -179px -300px;" title="清空地图上的所有标记"></div>
+	  	<div class="qq_bnt" style=" background-position: -223px -300px;" title="进入全屏模式" ></div>
+	 </div>
+       </div>
+ 	   <div id="divSosoMap"  class="allMaps"></div>
+   <div id="divSosoPano" class="allMaps"></div>
+   <div id="Soresult"></div>
+ </div> 
+ <!-- 腾讯秘钥 -->
+<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&key=N5GBZ-RBTRF-6OKJ3-JCGRQ-6NYKO-TLBE4"></script>
+<script type="text/javascript" src="js/soso.js"></script>
+<!-- soso坐标转换库 -->
+<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=convertor"></script>
+ </body>
+</html>

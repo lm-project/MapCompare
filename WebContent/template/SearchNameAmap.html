@@ -1,0 +1,41 @@
+<table id="searchResultsAmapTable" class="resultTable">
+	<thead><tr>
+		  <th style="width:25px;">序号</th>
+		  <th title="点击查看完整名称">名称</th>
+		  <th title="点击查看完整地址">地址</th>
+		  <th title="点击查看完整经纬度">坐标</th>
+          <th title="点击查看完整电话">电话</th>
+          <th title="点击查看完整邮编">邮编</th>
+          <th title="点击查看完整出入口经纬度">出入口经纬度</th>
+	      <th title="点击查看完整所在城市/行政区">所在城市/行政区</th>
+	      <th title="点击查看完整电子邮箱">电子邮箱</th><th>网址</th>
+	      <th title="点击查看完整电子类型">类型</th>
+	      <th title="点击查看完整离中心点距离">离中心点距离</th>
+	      </tr>
+	</thead>
+	 {{#pois}}
+    	<tr>
+    	<td>{{addOne @index}}</td>
+ 		<td>{{havaVal name}}</td>
+		<td>{{havaVal address}}</td>
+		<td>{{havaVal location}}</td>
+		<td>{{havaVal tel}}</td>
+		<td>{{havaVal postcode}}</td>
+		<td>入口：{{havaVal entr_location}}出口：{{havaVal exit_location}}</td>
+		<td>{{havaVal cityname}}/{{havaVal adname}}</td>
+		<td>{{havaVal email}}</td>
+		<td>{{havaVal website}}</td>
+		<td>{{havaVal type}}</td>
+		<td>{{havaVal distance}}</td>
+ 		</tr>
+ 	{{/pois}}
+
+</table>
+<div id='exportRelAmapDiv'>
+<span>总记录数：{{count}}</span><span style="margin-left: 20px;"></span>总页数：<span id="goPageAmapTotal">{{page count}}</span>
+<span id="pageAmap">
+	<button class="goPageAmap">上一页</button>
+	<input id="goPageAmapInput" type="text" value="1" style="width:30px;text-align: center;"/><button class="goPageAmap">GO</button>
+	<button class="goPageAmap">下一页</button>
+</span>
+</div>       
